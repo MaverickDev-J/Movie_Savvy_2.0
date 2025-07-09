@@ -9,8 +9,7 @@ import psutil
 import traceback
 import signal
 
-# ✅ Fix BASE_DIR to point to the project root
-BASE_DIR = Path(__file__).resolve().parent.parent.parent  # Should resolve to /teamspace/studios/this_studio
+BASE_DIR = Path(__file__).resolve().parent.parent.parent  
 sys.path.insert(0, str(BASE_DIR))
 
 from tracking.mlflow_manager import MLflowManager
@@ -239,110 +238,6 @@ class ExperimentRunner:
                 logger.warning(f"No successful queries for combination {combination_num}")
                 return {}
     
-    # async def _run_single_query(self, query: str, query_type: str, parameters: Dict[str, Any], 
-    #                           experiment_type: str, query_idx: int) -> Dict[str, float]:
-    #     """Run a single query with given parameters and return metrics.
-        
-    #     Args:
-    #         query: The query to process
-    #         query_type: Type of query (factual, opinion, etc.)
-    #         parameters: Parameters to use for this run
-    #         experiment_type: Type of experiment being run
-    #         query_idx: Index of the query
-            
-    #     Returns:
-    #         Dictionary of calculated metrics
-    #     """
-    #     start_time = time.time()
-        
-    #     try:
-    #         # Analyze query
-    #         query_analysis = self.analyze_query_intent(query)
-            
-    #         # Set parameters based on experiment type
-    #         rag_params = self._build_rag_parameters(parameters, experiment_type)
-            
-    #         # Measure retrieval
-    #         retrieval_start = time.time()
-    #         vector_chunks = await self.retrieve_vector(query, rag_params['top_k'])
-    #         retrieval_time = time.time() - retrieval_start
-            
-    #         # Measure web search if needed
-    #         web_start = time.time()
-    #         web_context = []
-    #         if query_analysis.get('needs_web_search', False):
-    #             web_context = await self.get_web_results_async(query, query_analysis)
-    #         web_time = time.time() - web_start
-            
-    #         # Prepare contexts
-    #         vector_context = [chunk['text'] for chunk in vector_chunks] if vector_chunks else []
-            
-    #         # Measure generation
-    #         generation_start = time.time()
-    #         response = self.generator.generate(
-    #             query=query,
-    #             local_context=vector_context,
-    #             web_context=web_context,
-    #             query_analysis=query_analysis,
-    #             **rag_params
-    #         )
-    #         generation_time = time.time() - generation_start
-            
-    #         total_time = time.time() - start_time
-            
-    #         # Calculate metrics
-    #         metrics = {}
-            
-    #         # Retrieval metrics
-    #         if vector_chunks:
-    #             retrieval_metrics = self.retrieval_metrics.calculate_metrics(
-    #                 query=query,
-    #                 retrieved_chunks=vector_chunks,
-    #                 retrieval_time=retrieval_time
-    #             )
-    #             metrics.update(retrieval_metrics)
-            
-    #         # Generation metrics
-    #         generation_metrics = self.generation_metrics.calculate_metrics(
-    #             query=query,
-    #             response=response,
-    #             context=vector_context + web_context,
-    #             generation_time=generation_time
-    #         )
-    #         metrics.update(generation_metrics)
-            
-    #         # System metrics
-    #         system_metrics = self.system_metrics.calculate_metrics(
-    #             total_time=total_time,
-    #             retrieval_time=retrieval_time,
-    #             generation_time=generation_time,
-    #             web_time=web_time
-    #         )
-    #         metrics.update(system_metrics)
-            
-    #         # Log the interaction
-    #         self.data_logger.log_data(
-    #             query=query,
-    #             response=response,
-    #             context=str(vector_context + web_context),
-    #             metadata={
-    #                 'query_type': query_type,
-    #                 'parameters': parameters,
-    #                 'experiment_type': experiment_type,
-    #                 'metrics': metrics,
-    #                 'query_idx': query_idx
-    #             }
-    #         )
-            
-    #         return metrics
-            
-    #     except Exception as e:
-    #         logger.error(f"Error in _run_single_query: {e}")
-    #         logger.error(traceback.format_exc())
-    #         return {'error_occurred': 1.0, 'total_time': time.time() - start_time}
-
-
-
     async def _run_single_query(self, query: str, query_type: str, parameters: Dict[str, Any], 
                             experiment_type: str, query_idx: int) -> Dict[str, float]:
         start_time = time.time()

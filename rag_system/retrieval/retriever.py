@@ -35,11 +35,6 @@ config = load_config()
 TOP_K = config['retrieval']['top_k']
 SIMILARITY_THRESHOLD = config['retrieval']['similarity_threshold']
 
-# REMOVE THIS FUNCTION - replaced by index_manager
-# async def load_index_and_metadata():
-#     """This function is now handled by IndexManager"""
-#     pass
-
 def preprocess_query(query):
     """Preprocess query to focus on key terms for diverse movie data."""
     filler_words = {

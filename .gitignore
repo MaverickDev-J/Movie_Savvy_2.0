@@ -97,3 +97,4 @@ rag_system/experiments/logs/
 !rag_system/generation/prompt_templates/
 !dvc.yaml
 !dvc.lock
+rag_system/retrieval/index/
