@@ -2,9 +2,10 @@
 
 ## Introduction
 
-Movie Savvy RAG 2.0 is a sophisticated Retrieval-Augmented Generation (RAG) system designed to answer entertainment-related queries with precision and enthusiasm. Tailored for fans of movies, anime, manga, K-dramas, K-movies, and Bollywood, this system integrates local knowledge from a vector database, real-time web insights, and YouTube video analysis to deliver engaging, geeky, and concise responses. Powered by the Mistral-7B-Instruct-v0.3 model, it leverages advanced intent classification and function calling to dynamically source content, making it a versatile tool for entertainment enthusiasts.
+Movie Savvy RAG 2.0 is a Retrieval-Augmented Generation (RAG) system built to deliver accurate, engaging responses to entertainment-related queries across movies, anime, manga, K-dramas, K-movies, and Bollywood. Powered by the Mistral-7B-Instruct-v0.3 model, it integrates local vector-based knowledge, real-time web results, and YouTube transcript analysis, guided by advanced intent classification and function calling.
 
-Whether you're curious about the latest MCU phases, the intricacies of a One Piece manga chapter, or want a breakdown of a Bollywood blockbuster, Movie Savvy RAG 2.0 combines cutting-edge AI with a fan-friendly tone to enhance your entertainment exploration.
+A key enhancement is its Adaptive RAG architecture, which dynamically selects and prioritizes retrieval sources based on query intent—ensuring responses are relevant, concise, and tailored to user needs.
+From MCU timelines to manga breakdowns or K-drama reviews, Movie Savvy RAG 2.0 brings intelligent, fan-friendly insights to every query.
 
 ---
 
@@ -13,26 +14,40 @@ Whether you're curious about the latest MCU phases, the intricacies of a One Pie
 Movie Savvy RAG 2.0 is packed with powerful functionalities that set it apart as an entertainment-focused AI assistant. Here’s what makes it tick:
 
 - **FAISS Vector Database**: Employs FAISS (Facebook AI Similarity Search) with an `IndexIVFFlat` index for fast and efficient similarity searches. It retrieves relevant content chunks from a preprocessed entertainment dataset stored in embeddings, enabling quick access to local knowledge.
-
+  
 - **Web Search Enabled**: Integrates with the Tavily API to fetch real-time web content. This feature is triggered for queries requiring current information (e.g., "latest" or "recent" events), ensuring responses stay up-to-date with web insights.
-
+  
 - **YouTube Video Analysis**: Utilizes the YouTube Data API for video searches and SearchAPI.io for transcript extraction. It analyzes video content by chunking transcripts and embedding them, perfect for queries needing trailers, reviews, or fan discussions.
-
+  
 - **Intent Classification**: Features an `EnhancedIntentClassifier` that analyzes query intent using both rule-based patterns and the Mistral model. It determines whether YouTube or web content is needed, optimizing retrieval strategies with high accuracy.
-
+  
 - **Semantic Content Scoring**: Implements a `SemanticContentProcessor` with the `intfloat/e5-large-v2` model to score and filter retrieved chunks based on semantic relevance to the query, ensuring only the most pertinent information is used.
-
+  
 - **Response Generation with Mistral-7B-Instruct-v0.3**: Leverages the Mistral-7B-Instruct-v0.3 model, which supports function calling via structured prompts. This enables dynamic content integration and generates conversational, fan-friendly responses.
-
+  
 - **Response Refinement**: Uses a `ResponseRefiner` to validate and polish responses against retrieved contexts, enhancing accuracy and coherence by filtering out irrelevant or low-confidence sentences.
-
+  
 - **Multi-Source Content Integration**: Combines local database chunks, web search results, and YouTube transcripts, weighted dynamically based on query intent (e.g., prioritizing YouTube for trailer requests).
-
+  
 - **Function Calling**: The Mistral model’s function calling capability orchestrates content retrieval through the `FunctionManager`, coordinating vector searches, web searches, and YouTube processing seamlessly.
-
+  
 - **Configurable Pipeline**: Managed by multiple YAML configuration files (`rag_config.yaml`, `model_config.yaml`, `processing_config.yaml`, `generation_config.yaml`) for flexible settings, from chunk sizes to generation parameters.
-
+  
 - **Experiment Tracking with MLflow**: Utilizes MLflow to track and analyze experiments, optimizing retrieval and generation parameters. Experiments identified `top_k = 8` and `similarity_threshold ≈ 0.61` as a high-fluency sweet spot, and `max_new_tokens = 1024`, `temperature = 0.6`, `top_k_sampling = 70`, with a tweak to `repetition_penalty = 1.1` for factual accuracy, balancing relevance, consistency, fluency, and efficiency.
+
+
+### Adaptive RAG System
+
+A defining feature of Movie Savvy RAG 2.0 is its **Adaptive RAG** system, which enhances the system’s ability to deliver tailored responses by dynamically adapting to each query. Key aspects include:
+
+- **Dynamic Retrieval**: Selects the most appropriate sources (local vector store, web search, or YouTube) based on intent analysis performed by the `EnhancedIntentClassifier`.
+- **Multi-Source Integration**: Combines and weights contexts from various sources (e.g., 8 vector chunks, 5 web results, 1 YouTube chunk) to ensure comprehensive and relevant responses.
+- **Context Prioritization**: Assigns dynamic weights to sources depending on the query type, such as prioritizing YouTube for trailer requests or web search for current events.
+- **Adaptive Generation**: Adjusts response generation parameters (e.g., `temperature`, `top_k`) based on intent, balancing creativity and factual accuracy as needed.
+- **Response Refinement**: Filters and validates responses against retrieved contexts to maintain high relevance and accuracy, ensuring polished outputs.
+
+This adaptability enables the system to efficiently handle diverse entertainment queries, from detailed explanations to real-time updates, with precision and responsiveness.
+
 
 ---
 
@@ -182,6 +197,9 @@ Movie Savvy RAG 2.0 operates through a modular pipeline:
 
 6. **Refinement** (`response_refiner.py`):
    - Filters response sentences for relevance using semantic similarity.
+
+The Adaptive RAG system enhances this architecture by enabling real-time adjustments to source selection and response generation, ensuring optimal performance across varied query types.
+
 
 ---
 
