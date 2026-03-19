@@ -304,27 +304,22 @@ RESPONSE GUIDELINES:
             return "[ERROR] Generation failed."
 
     def _build_prompt(self, local_context: list[str], web_context: list[str], youtube_context: list[dict], current_query: str, query_analysis: dict = None) -> str:
-        """Build the prompt with dynamically weighted contexts."""
-        query_type = query_analysis.get("query_type", "other") if query_analysis else "other"
-        weights = self.context_weighting.get_weights(query_type)
-        
-        prompt = f"Query: {current_query}\n\n"
-        
-        if youtube_context and weights['youtube'] > 0:
-            prompt += f"YouTube Insights (Weight: {weights['youtube']}):\n{self._format_youtube_context(youtube_context, 'YouTube Insights')}\n\n"
-        
-        if local_context and weights['local'] > 0:
-            prompt += f"Local Context (Weight: {weights['local']}):\n{self._format_context(local_context, 'Local Context')}\n\n"
-        
-        if web_context and weights['web'] > 0:
-            prompt += f"Web Insights (Weight: {weights['web']}):\n{self._format_context(web_context, 'Web Insights')}\n\n"
-        
-        prompt += (
-            f"Provide a detailed, accurate response based on the weighted contexts above. "
-            f"For trailer-related queries, prioritize YouTube insights with specific details (e.g., scenes, characters, themes). "
-            f"For YouTuber recommendations or fan discussions, focus on YouTube-sourced suggestions and theories."
-        )
-        
+        """Build the prompt using the loaded prompt template."""
+        formatted_local = self._format_context(local_context, 'Local Context')
+        formatted_web = self._format_context(web_context, 'Web Insights')
+        formatted_youtube = self._format_youtube_context(youtube_context, 'YouTube Insights')
+
+        try:
+            prompt = self.default_prompt_template.format(
+                query=current_query,
+                local_context=formatted_local,
+                web_context=formatted_web,
+                youtube_context=formatted_youtube,
+            )
+        except KeyError as e:
+            logger.warning(f"Prompt template missing placeholder {e}, falling back to basic prompt")
+            prompt = f"Query: {current_query}\n\nLocal Context:\n{formatted_local}\n\nWeb Insights:\n{formatted_web}\n\n### Response:"
+
         return prompt
 
     def get_model_info(self):

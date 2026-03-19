@@ -66,7 +66,7 @@ class ResponseRefiner:
                 
                 # Keep sentences with high similarity to context or query
                 query_similarity = cosine_similarity([sent_embedding], [query_embedding])[0][0]
-                if max_similarity >= 0.6 or query_similarity >= 0.7:
+                if max_similarity >= 0.75 or query_similarity >= 0.80:
                     refined_sentences.append(sentence)
                 else:
                     logger.debug(f"Filtered out sentence due to low relevance: {sentence}")

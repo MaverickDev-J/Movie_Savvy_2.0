@@ -74,7 +74,7 @@ retrieval:
     save_dir: retrieval/index
     type: faiss
   max_retrieved_tokens: 4000
-  similarity_threshold: 0.6
+  similarity_threshold: 0.7
   top_k: 8
   web_search:
   priority_threshold: 0.5  # Similarity threshold for web search fallback
